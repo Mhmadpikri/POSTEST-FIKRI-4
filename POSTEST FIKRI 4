@@ -1,0 +1,144 @@
+# MUHAMMAD FIKRI
+# NIM 2109106010
+# INFORMATIKA A 21
+
+import string
+import random
+
+def generate_id(size=6, chars=string.ascii_uppercase + string.digits):
+  return ''.join(random.choice(chars) for _ in range(size))
+
+menus = [
+  [generate_id(), "nasi goreng", 15000, "Makanan"],
+  [generate_id(), "mie goreng", 15000, "Makanan"],
+  [generate_id(), "nasi pecel", 15000, "Makanan"],
+  [generate_id(), "Nasi Kuning", 15000, "Makanan"],
+  [generate_id(), "nasi ayam", 15000, "Makanan"],
+  [generate_id(), "josua", 5000, "MInuman"],
+  [generate_id(), "jus mangga", 10000, "MInuman"],
+  [generate_id(), "mojita squash", 10000, "MInuman"],
+  [generate_id(), "lemon squash", 12000, "MInuman"],
+  [generate_id(), "es teh", 5000, "MInuman"],
+  [generate_id(), "es jeruk", 9000, "MInuman"],
+]
+
+def print_options():
+  print("""
+  cafe upik mania
+"Daftar menu kita kakak"
+========
+1. Daftar Menu
+2. Tambahkan Menu
+3. Ubah Menu
+4. Hapus Menu
+5. keluar
+  """)
+
+
+
+def print_menu():
+  Makanans = []
+  MInumans = []
+  for menu in menus:
+    if menu[3] == "Makanan":
+      Makanans.append(menu)
+    else:
+      MInumans.append(menu)
+  print("""
+DAFTAR MENU
+===============""")
+  print("""
+MAKANAN
+==============""")
+  for index, Makanan in enumerate(Makanans):
+    print(f"{index + 1}. [{Makanan[0]}] {Makanan[1]} - Rp. {Makanan[2]}")
+  print("""
+\nMINUMAN
+==============""")
+  for index, MInuman in enumerate(MInumans):
+    print(f"{index + 1}. [{MInuman[0]}] {MInuman[1]} - Rp. {MInuman[2]}")
+  input()
+
+
+def find_menu(items, id):
+  return next((item for item in items if item[0] == id), None)
+
+def store_menu(items, data, is_append=True):
+  if is_append:
+    items.append(data)
+  else:
+    midpoint = len(items)//2  
+    items = items[0:midpoint] + [data] + items[midpoint:]
+  return items
+
+def destroy_menu(items, id):
+  menu = find_menu(items, id)
+  if menu != None:
+    if menu[3] == "Makanan":
+      del menu
+    else:
+      items.remove(menu)
+
+
+def get_is_Makanan(Pesan):
+  print(f"""
+{Pesan}
+1. Makanan
+2. Minuman
+  """)
+  choice = input("Masukkan pilihan : ")
+  return choice == "1"
+  
+
+
+choice = "0"
+while choice != "5":
+  print_options()
+  choice = input("Pilih apa yang ingin anda lakukan: ")
+  if choice == "1":
+    print_menu()
+  elif choice == "2":
+    is_Makanan = get_is_Makanan("Menu apa yang ingin ditambahkan?")
+    menu_type = "Minuman" if is_Makanan else "Makanan"
+    menu_id = generate_id()
+    name = input("\nMasukkan nama minuman : ")
+    price = input("Masukkan harga minuman : ")
+    menu = [menu_id, name, int(price), menu_type]
+    is_append =  input("tambahkan menu di tengah?(y/t) : ") == "n"
+    store_menu(menus, menu, is_append)
+    print("selamat menu berhasil ditambahkan")
+    input()
+
+  elif choice == "3":
+    id = input("Masukkan ID menu : ")
+    menu = find_menu(menus, id)
+    if menu != None:
+      print(f"""
+ID Menu: {menu[0]}
+Nama Menu: {menu[1]}
+Harga: Rp. {menu[2]}\n""")
+      menu[1] = input("input nama menu baru : ")
+      menu[2] = input("inputhargamenu baru : ")
+      print("selamat Menu berhasil diubah")
+    else:
+      print("Menu tidak ditemukan")
+    input()
+
+  elif choice == "4":
+    id = input("Masukkan ID menu : ")
+    menu = find_menu(menus, id)
+    if menu != None:
+      print(f"""
+ID Menu: {menu[0]}
+Nama Menu: {menu[1]}
+Harga: Rp. {menu[2]}\n""")
+      is_confirmed = input("Yakin ingin mengahapus menu ini?(y/t) : ") == "y"
+      if is_confirmed:
+        destroy_menu(menus, id)
+        print("Menu berhasil dihapus")
+    else:
+      print("Menu tidak ditemukan")
+    input()
+  else:
+    print("selamat menikmati dan terima kasih")
+    exit()
